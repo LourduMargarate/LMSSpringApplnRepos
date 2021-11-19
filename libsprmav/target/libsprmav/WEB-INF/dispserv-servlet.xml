@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd"> 
+	<context:component-scan base-package="com.mph.*"></context:component-scan>
+	<mvc:annotation-driven />
+	<tx:annotation-driven />
+	<aop:aspectj-autoproxy/>
+	<context:property-placeholder
+		location="classpath:database.properties" />
+	<bean id="jspViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/WEB-INF/pages/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${database.driver}"></property>
+		<property name="url" value="${database.url}"></property>
+		<property name="username" value="${database.username}"></property>
+		<property name="password" value="${database.password}"></property>
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.mph.entity.Book</value>
+			
+			
+				<value>com.mph.entity.BookIssue</value>
+			
+				<value>com.mph.entity.LibraryUser</value>
+			
+				<value>com.mph.entity.ReturnBook</value>
+			
+				
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle8iDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	
+	
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="book" class="com.mph.entity.Book" />
+	<bean id="bookIssue" class="com.mph.entity.BookIssue" />
+	<bean id="libraryUser" class="com.mph.entity.LibraryUser" />
+	<bean id="returnBook" class="com.mph.entity.ReturnBook" />
+	
+	
+	<bean id="bookDao" class="com.mph.dao.BookDaoImpl"/>
+	<bean id="bookIssueDao" class="com.mph.dao.BookIssueDaoImpl"/>
+	<bean id="libraryUserDao" class="com.mph.dao.LibraryUserDaoImpl"/>
+	<bean id="returnBookDao" class="com.mph.dao.ReturnBookDaoImpl"/>
+	
+	
+	<bean id="bookIssueService" class="com.mph.service.BookIssueServiceImpl"/>
+	<bean id="bookService" class="com.mph.service.BookServiceImpl"/>
+	<bean id="libraryUserService" class="com.mph.service.LibraryUserServiceImpl"/>
+	<bean id="returnBookService" class="com.mph.service.ReturnBookServiceImpl"/>
+	
+</beans>
+
+
